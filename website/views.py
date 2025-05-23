@@ -6,6 +6,7 @@ import json
 
 views = Blueprint('views', __name__)
 
+
 @views.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
@@ -22,12 +23,17 @@ def home():
 
     return render_template("home.html", user=current_user)
 
+# delete note from current user
+
+
 @views.route('/delete-note', methods=['POST'])
 def delete_note():
+    # turn the string into python dictionary object
     note = json.loads(request.data)
     noteId = note['noteId']
-    note = Note.query.get(noteId)
+    note = Note.query.get(noteId)  # retrieve the note from the request data
 
+    """ if note is present, delete the note from current user """
     if note:
         if note.user_id == current_user.id:
             db.session.delete(note)
